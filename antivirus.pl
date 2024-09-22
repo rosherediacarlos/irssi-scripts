@@ -2,30 +2,33 @@ use strict;
 use warnings;
 use Irssi;
 
-sub respuesta {
-    my ($servidor, $mensaje, $nick, $direccion, $target) = @_;
+sub response {
+    my ($server, $message, $nick, $address, $channel) = @_;
 
-    if ($mensaje =~ /^!errores$/i) {
-        my $canal_info = $servidor->channel_find($target);
-            if ($canal_info) {
-            my @usuarios = $canal_info->nicks();
-            my @nicks_encontrados = map { $_->{nick} } 
+    if ($message =~ /^!errores$/i) {
+        my $channel_info = $server->channel_find($channel);
+            if ($channel_info) {
+            my @users = $channel_info->nicks();
+            my @found_nicks = map { $_->{nick} } 
                                 grep { $_->{nick} =~ /error/i } 
-                                @usuarios;
-            if (@nicks_encontrados) {
-                my $nicks_lista = join(', ', @nicks_encontrados);
-                my $numero_erroes = scalar @nicks_encontrados;
+                                @users;
+            if (@found_nicks) {
+                my $nicks_list = join(', ', @found_nicks);
+                my $error_count = scalar @found_nicks;
                 my $window = Irssi::active_win;  
-                $window->command("me Ha encontrado $numero_erroes errores: $nicks_lista");
+                $window->command("me ha encontrado $error_count errores: $nicks_list");
             }
         }
-
     }
-    if ($mensaje =~ /^!virus$/i) {
+
+    if ($message =~ /^!virus$/i) {
             my $window = Irssi::active_win;  
-            $window->command("me Analizando la sala de posibles virus");
-            $window->command("me Se ha encontrado una amenaza. Eliminando...");
-            $servidor->command("kick $target $nick Eliminando amenza!");
+            $window->command("me está analizando la sala de posibles virus");
+            $window->command("me ha encontrado una amenaza. Eliminando...");
+
+	    if ($server->channel_find($channel)) {
+            	$server->command("kick $channel $nick Eliminando Amenza!");
+		}
     }
 }
-Irssi::signal_add('message public', 'respuesta');
+Irssi::signal_add('message public', 'response');
