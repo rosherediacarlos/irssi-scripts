@@ -6,12 +6,12 @@ use Irssi;
 #Irssi::script_register('mi_bot', '1.0', 'Bot simple de prueba');
 
 # Función que se llama cuando alguien habla en el canal
-sub respuesta {
-    my ($servidor, $mensaje, $nick, $direccion, $target) = @_;
+sub response {
+    my ($server, $message, $nick, $address, $channel) = @_;
 
-    if ($mensaje =~ /^!hola$/i) {
+    if ($message =~ /^!hola$/i) {
         # Envía un mensaje de respuesta al canal donde se envió el comando
-        $servidor->command("msg $target Hola, $nick!");
+        $server->command("msg $channel Hola, $nick!");
     }
 }
 
